@@ -27,11 +27,11 @@ export interface VehicleModelSummary {
   modelName: string;
 }
 
+// Backend DriverSummaryDTO uses fullName (not firstName/lastName)
 export interface DriverSummary {
   idDriver: number;
   sapNumber: number;
-  firstName: string;
-  lastName: string;
+  fullName: string | null;
 }
 
 export interface VehicleSummary {
@@ -50,71 +50,75 @@ export interface AppUserSummary {
 // Response DTOs (full detail, for GET responses)
 // ============================================
 
+// FIXED: matches VehicleResponseDTO.RegistrationSummaryDTO
+// registrationNumber = the plate/reg number shown in vehicle table
 export interface RegistrationInfo {
   idRegistration: number;
   registrationNumber: string;
-  expirationDate: string;
+  dateFrom: string;
+  dateTo: string;
+  status: string;
 }
 
+// FIXED: matches VehicleResponseDTO.FirstAidKitSummaryDTO
+// expiryDate (not expirationDate) — this is the nested version inside VehicleResponse
 export interface FirstAidKitInfo {
   idFirstAidKit: number;
-  expirationDate: string;
+  expiryDate: string;
+  status: string;
 }
 
+// FIXED: matches VehicleResponseDTO exactly
 export interface VehicleResponse {
   idVehicle: number;
   sapNumber: number;
   chassisNumber: string;
-  registrationPlate: string | null;
+  engineNumber: number | null;
+  tagSerialNumber: number | null;
+  yearOfManufacture: number | null;
+  engineDisplacement: number | null;
+  power: number | null;
+  tireMarking: string | null;
+  fireExtinguisherSerialNumber: number | null;
   vehicleStatus: string;
   statusCode: number;
-  yearOfManufacture: number | null;
-  mileage: number | null;
-  horsePower: number | null;
-  kilowatts: number | null;
-  displacement: number | null;
-  numberOfDoors: number | null;
-  numberOfSeats: number | null;
-  maxSpeed: number | null;
-  airConditioning: boolean | null;
-  color: string | null;
-  brand: BrandSummary | null;
   vehicleModel: VehicleModelSummary | null;
   fuelType: FuelTypeSummary | null;
   registration: RegistrationInfo | null;
   firstAidKit: FirstAidKitInfo | null;
-  locationUnit: LocationUnitSummary | null;
+  location: LocationUnitSummary | null;
 }
 
-export interface DriverLicenseInfo {
+// FIXED: matches DriverResponseDTO
+export interface DriverLicenseSummary {
   idDriversLicense: number;
-  licenseNumber: string;
-  expirationDate: string;
-  categories: string[];
+  dateFrom: string;
+  dateTo: string;
+  status: string;
+  licenseCategory: string;
 }
 
 export interface DriverResponse {
   idDriver: number;
   sapNumber: number;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string | null;
+  fullName: string | null;
+  phone: string | null;
   status: string;
-  driversLicense: DriverLicenseInfo | null;
-  locationUnit: LocationUnitSummary | null;
+  statusCode: number | null;
+  location: LocationUnitSummary | null;
+  licenses: DriverLicenseSummary[];
 }
 
+// FIXED: matches TravelOrderResponseDTO — no destination/purpose/notes (not in DB)
 export interface TravelOrderResponse {
   idTravelOrder: number;
   travelOrderNumber: string;
+  workOrderNumber: string;
   status: string;
   startingMileage: number;
   endingMileage: number | null;
-  departureDate: string;
-  returnDate: string | null;
-  destination: string | null;
-  purpose: string | null;
-  notes: string | null;
+  dateFrom: string;
+  dateTo: string;
   createdByUser: AppUserSummary | null;
   location: LocationUnitSummary | null;
   drivers: DriverSummary[];
@@ -136,7 +140,7 @@ export interface AppUserResponse {
 export interface BrandResponse {
   idBrand: number;
   brandName: string;
-  vehicleModelCount: number;
+  vehicleModelCount: number;  // was: modelCount
 }
 
 export interface VehicleModelResponse {
@@ -159,44 +163,44 @@ export interface LocationUnitResponse {
 // Request DTOs (for POST/PUT operations)
 // ============================================
 
+// FIXED: matches VehicleRequestDTO exactly
 export interface VehicleRequest {
   sapNumber: number;
   chassisNumber: string;
-  registrationPlate?: string;
-  vehicleStatus: string;
-  statusCode: number;
+  engineNumber?: number;
+  tagSerialNumber?: number;
   yearOfManufacture?: number;
-  mileage?: number;
-  horsePower?: number;
-  kilowatts?: number;
-  displacement?: number;
-  numberOfDoors?: number;
-  numberOfSeats?: number;
-  maxSpeed?: number;
-  airConditioning?: boolean;
-  color?: string;
-  brandId: number;
-  modelId: number;
+  engineDisplacement?: number;
+  power?: number;
+  tireMarking?: string;
+  fireExtinguisherSerialNumber?: number;
+  vehicleStatus?: string;
+  statusCode?: number;
   fuelTypeId: number;
+  vehicleModelId: number;
+  registrationId?: number;
+  firstAidKitId?: number;
 }
 
+// FIXED: matches DriverRequestDTO
 export interface DriverRequest {
   sapNumber: number;
-  firstName: string;
-  lastName: string;
-  phoneNumber?: string;
+  fullName: string;
+  phone?: string;
   status: string;
+  statusCode?: number;
 }
 
+// FIXED: matches TravelOrderRequestDTO — no destination/purpose/notes
 export interface TravelOrderRequest {
+  locationId: number;
+  workOrderNumber: string;
+  dateFrom: string;
+  dateTo: string;
+  travelOrderNumber?: string;
   startingMileage: number;
   endingMileage?: number;
-  departureDate: string;
-  returnDate?: string;
-  destination?: string;
-  purpose?: string;
-  notes?: string;
-  locationId: number;
+  status?: string;
   driverIds?: number[];
   vehicleIds?: number[];
 }
@@ -218,6 +222,7 @@ export interface LoginRequest {
   password: string;
 }
 
+// Confirmed: matches backend LoginResponseDTO
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
@@ -235,37 +240,86 @@ export interface AuthUser {
 }
 
 // ============================================
-// Simple Entity Types (no DTO, direct entity)
+// Simple Entity Types
+// These are used for both read (ResponseDTO) and write (raw entity) operations.
+// IMPORTANT: POST/PUT endpoints accept raw entity field names, which differ
+// from the response DTO field names in some cases — see notes per type.
 // ============================================
 
+// FuelType — returned directly from /fuel-types (no DTO wrapper)
 export interface FuelType {
   idFuelType: number;
   fuelName: string;
 }
 
+// Role — returned directly from /roles (no DTO wrapper)
 export interface Role {
   idRole: number;
   name: string;
 }
 
+// FIXED: matches RegistrationResponseDTO (GET) and Registration entity (POST/PUT)
+// GET response returns: expirationDate (mapped from entity.dateTo)
+// POST/PUT entity expects: dateTo (not expirationDate)
+// Use RegistrationWriteData for create/update payloads.
 export interface Registration {
   idRegistration: number;
   registrationNumber: string;
-  expirationDate: string;
-  vehicleId: number;
+  dateFrom: string;
+  expirationDate: string; // read-side: DTO maps entity.dateTo → expirationDate
+  policyNumber: number | null;
+  status: string;
+  statusCode: number | null;
+  vehicleId: number | null;
 }
 
+// Write payload for POST/PUT — uses entity field names
+export interface RegistrationWriteData {
+  registrationNumber: string;
+  dateFrom?: string;
+  dateTo: string;           // entity field name (NOT expirationDate)
+  policyNumber?: number;
+  status?: string;
+  statusCode?: number;
+}
+
+// FIXED: matches DriversLicenseResponseDTO
+// licenseNumber does NOT exist in the entity or DB — removed
+// driverId does NOT exist in the response DTO — removed
+// The driver↔license link is managed via DriverLicenseAssignment, not this entity
 export interface DriversLicense {
   idDriversLicense: number;
-  licenseNumber: string;
-  expirationDate: string;
-  driverId: number;
+  dateFrom: string;
+  expirationDate: string;   // read-side: DTO maps entity.dateTo → expirationDate
+  status: string;
+  statusCode: number | null;
 }
 
+// Write payload for POST/PUT — uses entity field names
+export interface DriversLicenseWriteData {
+  dateFrom?: string;
+  dateTo: string;           // entity field name (NOT expirationDate)
+  status?: string;
+  statusCode?: number;
+}
+
+// FIXED: matches FirstAidKitResponseDTO (GET) and FirstAidKit entity (POST/PUT)
+// GET response returns: expirationDate (DTO maps entity.expiryDate → expirationDate)
+// POST/PUT entity expects: expiryDate (not expirationDate)
+// vehicleId is included in the response DTO
 export interface FirstAidKit {
   idFirstAidKit: number;
-  expirationDate: string;
-  vehicleId: number;
+  expirationDate: string;   // read-side: DTO maps entity.expiryDate → expirationDate
+  status: string;
+  statusCode: number | null;
+  vehicleId: number | null;
+}
+
+// Write payload for POST/PUT — uses entity field names
+export interface FirstAidKitWriteData {
+  expiryDate: string;       // entity field name (NOT expirationDate)
+  status?: string;
+  statusCode?: number;
 }
 
 export interface LicenseCategory {

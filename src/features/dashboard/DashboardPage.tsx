@@ -89,7 +89,11 @@ export function DashboardPage() {
 
   // Recent travel orders (last 5)
   const recentOrders = [...data.travelOrders]
-      .sort((a, b) => new Date(b.departureDate).getTime() - new Date(a.departureDate).getTime())
+      .sort((a, b) => {
+        const dateA = a.dateFrom ? new Date(a.dateFrom).getTime() : 0;
+        const dateB = b.dateFrom ? new Date(b.dateFrom).getTime() : 0;
+        return dateB - dateA;
+      })
       .slice(0, 5);
 
   // Vehicles by status for breakdown
@@ -184,8 +188,10 @@ export function DashboardPage() {
                             <p className="text-sm font-medium text-gray-900 truncate">
                               {order.travelOrderNumber}
                             </p>
+                            {/* FIXED: destination and departureDate don't exist in DB.
+                                Show work order number (if present) or location name, plus dateFrom. */}
                             <p className="text-xs text-gray-500 truncate">
-                              {order.destination || 'No destination'} · {formatDate(order.departureDate)}
+                              {order.location?.locationName || '—'} · {formatDate(order.dateFrom)}
                             </p>
                           </div>
                         </div>
@@ -284,12 +290,12 @@ export function DashboardPage() {
                               </div>
                             </div>
                             <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Car className="h-3.5 w-3.5" /> {loc.vehicleCount}
-                      </span>
                               <span className="flex items-center gap-1">
-                        <Users className="h-3.5 w-3.5" /> {loc.driverCount}
-                      </span>
+                                <Car className="h-3.5 w-3.5" /> {loc.vehicleCount}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Users className="h-3.5 w-3.5" /> {loc.driverCount}
+                              </span>
                             </div>
                           </div>
                       ))}

@@ -22,6 +22,7 @@ export interface FormField {
   disabled?: boolean;
   colSpan?: 1 | 2;
   helpText?: string;
+  multiple?: boolean;
 }
 
 interface FormModalProps {
@@ -65,6 +66,8 @@ export function FormModal({
           defaults[field.key] = initialData[field.key];
         } else if (field.type === 'checkbox') {
           defaults[field.key] = false;
+        } else if (field.type === 'select' && field.multiple) {
+          defaults[field.key] = [];
         } else if (field.type === 'number') {
           defaults[field.key] = '';
         } else {
@@ -98,7 +101,10 @@ export function FormModal({
       const val = formData[field.key];
 
       if (field.required) {
-        if (val === '' || val === undefined || val === null) {
+        const isEmptyArray = Array.isArray(val) && val.length === 0;
+        const isEmptyScalar = val === '' || val === undefined || val === null;
+
+        if (isEmptyScalar || isEmptyArray) {
           newErrors[field.key] = `${field.label} is required.`;
           return;
         }
@@ -204,12 +210,27 @@ export function FormModal({
 
                       {field.type === 'select' ? (
                           <select
-                              value={String(formData[field.key] ?? '')}
-                              onChange={(e) => handleChange(field.key, e.target.value)}
+                              multiple={!!field.multiple}
+                              value={
+                                field.multiple
+                                    ? ((formData[field.key] as unknown[]) ?? []).map(String)
+                                    : String(formData[field.key] ?? '')
+                              }
+                              onChange={(e) => {
+                                if (field.multiple) {
+                                  const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
+                                  handleChange(field.key, selected);
+                                } else {
+                                  handleChange(field.key, e.target.value);
+                                }
+                              }}
                               className={`input-field ${errors[field.key] ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
                               disabled={field.disabled || submitting}
+                              size={field.multiple ? 6 : undefined} // opcionalno: da se vidi više stavki
                           >
-                            <option value="">Select {field.label.toLowerCase()}...</option>
+                            {!field.multiple && (
+                                <option value="">Select {field.label.toLowerCase()}...</option>
+                            )}
                             {field.options?.map((opt) => (
                                 <option key={opt.value} value={opt.value}>
                                   {opt.label}

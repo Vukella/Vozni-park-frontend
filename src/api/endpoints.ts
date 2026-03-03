@@ -29,7 +29,7 @@ import type {
 
 export const authApi = {
   login: (data: LoginRequest) =>
-    apiClient.post<LoginResponse>('/auth/login', data),
+      apiClient.post<LoginResponse>('/auth/login', data),
 };
 
 // ============================================
@@ -38,25 +38,25 @@ export const authApi = {
 
 export const vehicleApi = {
   getAll: () =>
-    apiClient.get<VehicleResponse[]>('/vehicles'),
+      apiClient.get<VehicleResponse[]>('/vehicles'),
 
   getById: (id: number) =>
-    apiClient.get<VehicleResponse>(`/vehicles/${id}`),
+      apiClient.get<VehicleResponse>(`/vehicles/${id}`),
 
   getByLocation: (locationId: number) =>
-    apiClient.get<VehicleResponse[]>(`/vehicles/location/${locationId}`),
+      apiClient.get<VehicleResponse[]>(`/vehicles/location/${locationId}`),
 
   getAvailable: () =>
-    apiClient.get<VehicleResponse[]>('/vehicles/available'),
+      apiClient.get<VehicleResponse[]>('/vehicles/available'),
 
   create: (data: VehicleRequest) =>
-    apiClient.post<VehicleResponse>('/vehicles', data),
+      apiClient.post<VehicleResponse>('/vehicles', data),
 
   update: (id: number, data: VehicleRequest) =>
-    apiClient.put<VehicleResponse>(`/vehicles/${id}`, data),
+      apiClient.put<VehicleResponse>(`/vehicles/${id}`, data),
 
   delete: (id: number) =>
-    apiClient.delete(`/vehicles/${id}`),
+      apiClient.delete(`/vehicles/${id}`),
 };
 
 // ============================================
@@ -65,28 +65,28 @@ export const vehicleApi = {
 
 export const driverApi = {
   getAll: () =>
-    apiClient.get<DriverResponse[]>('/drivers'),
+      apiClient.get<DriverResponse[]>('/drivers'),
 
   getById: (id: number) =>
-    apiClient.get<DriverResponse>(`/drivers/${id}`),
+      apiClient.get<DriverResponse>(`/drivers/${id}`),
 
   getAvailable: () =>
-    apiClient.get<DriverResponse[]>('/drivers/available'),
+      apiClient.get<DriverResponse[]>('/drivers/available'),
 
   getByStatus: (status: string) =>
-    apiClient.get<DriverResponse[]>(`/drivers/status/${status}`),
+      apiClient.get<DriverResponse[]>(`/drivers/status/${status}`),
 
   search: (name: string) =>
-    apiClient.get<DriverResponse[]>(`/drivers/search?name=${encodeURIComponent(name)}`),
+      apiClient.get<DriverResponse[]>(`/drivers/search?name=${encodeURIComponent(name)}`),
 
   create: (data: DriverRequest) =>
-    apiClient.post<DriverResponse>('/drivers', data),
+      apiClient.post<DriverResponse>('/drivers', data),
 
   update: (id: number, data: DriverRequest) =>
-    apiClient.put<DriverResponse>(`/drivers/${id}`, data),
+      apiClient.put<DriverResponse>(`/drivers/${id}`, data),
 
   delete: (id: number) =>
-    apiClient.delete(`/drivers/${id}`),
+      apiClient.delete(`/drivers/${id}`),
 };
 
 // ============================================
@@ -95,43 +95,45 @@ export const driverApi = {
 
 export const travelOrderApi = {
   getAll: () =>
-    apiClient.get<TravelOrderResponse[]>('/travel-orders'),
+      apiClient.get<TravelOrderResponse[]>('/travel-orders'),
 
   getById: (id: number) =>
-    apiClient.get<TravelOrderResponse>(`/travel-orders/${id}`),
+      apiClient.get<TravelOrderResponse>(`/travel-orders/${id}`),
 
   getByStatus: (status: string) =>
-    apiClient.get<TravelOrderResponse[]>(`/travel-orders/status/${status}`),
+      apiClient.get<TravelOrderResponse[]>(`/travel-orders/status/${status}`),
 
   getByDriver: (driverId: number) =>
-    apiClient.get<TravelOrderResponse[]>(`/travel-orders/driver/${driverId}`),
+      apiClient.get<TravelOrderResponse[]>(`/travel-orders/driver/${driverId}`),
 
   getByVehicle: (vehicleId: number) =>
-    apiClient.get<TravelOrderResponse[]>(`/travel-orders/vehicle/${vehicleId}`),
+      apiClient.get<TravelOrderResponse[]>(`/travel-orders/vehicle/${vehicleId}`),
 
   getByDateRange: (startDate: string, endDate: string) =>
-    apiClient.get<TravelOrderResponse[]>(
-      `/travel-orders/date-range?startDate=${startDate}&endDate=${endDate}`
-    ),
+      apiClient.get<TravelOrderResponse[]>(
+          `/travel-orders/date-range?startDate=${startDate}&endDate=${endDate}`
+      ),
 
   create: (data: TravelOrderRequest) =>
-    apiClient.post<TravelOrderResponse>('/travel-orders', data),
+      apiClient.post<TravelOrderResponse>('/travel-orders', data),
 
   update: (id: number, data: TravelOrderRequest) =>
-    apiClient.put<TravelOrderResponse>(`/travel-orders/${id}`, data),
+      apiClient.put<TravelOrderResponse>(`/travel-orders/${id}`, data),
 
   complete: (id: number, endingMileage: number) =>
-    apiClient.patch<TravelOrderResponse>(
-      `/travel-orders/${id}/complete`,
-      null,
-      { params: { endingMileage } }
-    ),
+      apiClient.patch<TravelOrderResponse>(
+          `/travel-orders/${id}/complete`,
+          null,
+          { params: { endingMileage } }
+      ),
 
+  // FIXED: was PATCH /travel-orders/{id}/status?status=CANCELLED
+  // Correct endpoint is PATCH /travel-orders/{id}/cancel (no body, no params)
   cancel: (id: number) =>
-    apiClient.patch<TravelOrderResponse>(`/travel-orders/${id}/cancel`),
+      apiClient.patch<TravelOrderResponse>(`/travel-orders/${id}/cancel`, null),
 
   delete: (id: number) =>
-    apiClient.delete(`/travel-orders/${id}`),
+      apiClient.delete(`/travel-orders/${id}`),
 };
 
 // ============================================
@@ -140,22 +142,22 @@ export const travelOrderApi = {
 
 export const userApi = {
   getAll: () =>
-    apiClient.get<AppUserResponse[]>('/users'),
+      apiClient.get<AppUserResponse[]>('/users'),
 
   getById: (id: number) =>
-    apiClient.get<AppUserResponse>(`/users/${id}`),
+      apiClient.get<AppUserResponse>(`/users/${id}`),
 
   create: (data: AppUserRequest) =>
-    apiClient.post<AppUserResponse>('/users', data),
+      apiClient.post<AppUserResponse>('/users', data),
 
   update: (id: number, data: AppUserRequest) =>
-    apiClient.put<AppUserResponse>(`/users/${id}`, data),
+      apiClient.put<AppUserResponse>(`/users/${id}`, data),
 
   updatePassword: (id: number, newPassword: string) =>
-    apiClient.patch(`/users/${id}/password`, null, { params: { newPassword } }),
+      apiClient.patch(`/users/${id}/password`, null, { params: { newPassword } }),
 
   delete: (id: number) =>
-    apiClient.delete(`/users/${id}`),
+      apiClient.delete(`/users/${id}`),
 };
 
 // ============================================
@@ -164,19 +166,19 @@ export const userApi = {
 
 export const brandApi = {
   getAll: () =>
-    apiClient.get<BrandResponse[]>('/brands'),
+      apiClient.get<BrandResponse[]>('/brands'),
 
   getById: (id: number) =>
-    apiClient.get<BrandResponse>(`/brands/${id}`),
+      apiClient.get<BrandResponse>(`/brands/${id}`),
 
   create: (data: { brandName: string }) =>
-    apiClient.post<BrandResponse>('/brands', data),
+      apiClient.post<BrandResponse>('/brands', data),
 
   update: (id: number, data: { brandName: string }) =>
-    apiClient.put<BrandResponse>(`/brands/${id}`, data),
+      apiClient.put<BrandResponse>(`/brands/${id}`, data),
 
   delete: (id: number) =>
-    apiClient.delete(`/brands/${id}`),
+      apiClient.delete(`/brands/${id}`),
 };
 
 // ============================================
@@ -185,19 +187,19 @@ export const brandApi = {
 
 export const vehicleModelApi = {
   getAll: () =>
-    apiClient.get<VehicleModelResponse[]>('/vehicle-models'),
+      apiClient.get<VehicleModelResponse[]>('/vehicle-models'),
 
   getByBrand: (brandId: number) =>
-    apiClient.get<VehicleModelResponse[]>(`/vehicle-models/brand/${brandId}`),
+      apiClient.get<VehicleModelResponse[]>(`/vehicle-models/brand/${brandId}`),
 
   create: (data: { modelName: string; brandId: number }) =>
-    apiClient.post<VehicleModelResponse>('/vehicle-models', data),
+      apiClient.post<VehicleModelResponse>('/vehicle-models', data),
 
   update: (id: number, data: { modelName: string; brandId: number }) =>
-    apiClient.put<VehicleModelResponse>(`/vehicle-models/${id}`, data),
+      apiClient.put<VehicleModelResponse>(`/vehicle-models/${id}`, data),
 
   delete: (id: number) =>
-    apiClient.delete(`/vehicle-models/${id}`),
+      apiClient.delete(`/vehicle-models/${id}`),
 };
 
 // ============================================
@@ -206,19 +208,19 @@ export const vehicleModelApi = {
 
 export const locationApi = {
   getAll: () =>
-    apiClient.get<LocationUnitResponse[]>('/locations'),
+      apiClient.get<LocationUnitResponse[]>('/locations'),
 
   getById: (id: number) =>
-    apiClient.get<LocationUnitResponse>(`/locations/${id}`),
+      apiClient.get<LocationUnitResponse>(`/locations/${id}`),
 
   create: (data: { locationName: string; address?: string; city?: string }) =>
-    apiClient.post<LocationUnitResponse>('/locations', data),
+      apiClient.post<LocationUnitResponse>('/locations', data),
 
   update: (id: number, data: { locationName: string; address?: string; city?: string }) =>
-    apiClient.put<LocationUnitResponse>(`/locations/${id}`, data),
+      apiClient.put<LocationUnitResponse>(`/locations/${id}`, data),
 
   delete: (id: number) =>
-    apiClient.delete(`/locations/${id}`),
+      apiClient.delete(`/locations/${id}`),
 };
 
 // ============================================
@@ -227,16 +229,16 @@ export const locationApi = {
 
 export const fuelTypeApi = {
   getAll: () =>
-    apiClient.get<FuelType[]>('/fuel-types'),
+      apiClient.get<FuelType[]>('/fuel-types'),
 
   create: (data: { fuelName: string }) =>
-    apiClient.post<FuelType>('/fuel-types', data),
+      apiClient.post<FuelType>('/fuel-types', data),
 
   update: (id: number, data: { fuelName: string }) =>
-    apiClient.put<FuelType>(`/fuel-types/${id}`, data),
+      apiClient.put<FuelType>(`/fuel-types/${id}`, data),
 
   delete: (id: number) =>
-    apiClient.delete(`/fuel-types/${id}`),
+      apiClient.delete(`/fuel-types/${id}`),
 };
 
 // ============================================
@@ -245,13 +247,13 @@ export const fuelTypeApi = {
 
 export const roleApi = {
   getAll: () =>
-    apiClient.get<Role[]>('/roles'),
+      apiClient.get<Role[]>('/roles'),
 
   create: (data: { name: string }) =>
-    apiClient.post<Role>('/roles', data),
+      apiClient.post<Role>('/roles', data),
 
   delete: (id: number) =>
-    apiClient.delete(`/roles/${id}`),
+      apiClient.delete(`/roles/${id}`),
 };
 
 // ============================================
@@ -260,19 +262,19 @@ export const roleApi = {
 
 export const registrationApi = {
   getAll: () =>
-    apiClient.get<Registration[]>('/registrations'),
+      apiClient.get<Registration[]>('/registrations'),
 
   getByVehicle: (vehicleId: number) =>
-    apiClient.get<Registration>(`/registrations/vehicle/${vehicleId}`),
+      apiClient.get<Registration>(`/registrations/vehicle/${vehicleId}`),
 
   create: (data: Omit<Registration, 'idRegistration'>) =>
-    apiClient.post<Registration>('/registrations', data),
+      apiClient.post<Registration>('/registrations', data),
 
   update: (id: number, data: Omit<Registration, 'idRegistration'>) =>
-    apiClient.put<Registration>(`/registrations/${id}`, data),
+      apiClient.put<Registration>(`/registrations/${id}`, data),
 
   delete: (id: number) =>
-    apiClient.delete(`/registrations/${id}`),
+      apiClient.delete(`/registrations/${id}`),
 };
 
 // ============================================
@@ -281,19 +283,19 @@ export const registrationApi = {
 
 export const driversLicenseApi = {
   getAll: () =>
-    apiClient.get<DriversLicense[]>('/drivers-licenses'),
+      apiClient.get<DriversLicense[]>('/drivers-licenses'),
 
   getByDriver: (driverId: number) =>
-    apiClient.get<DriversLicense>(`/drivers-licenses/driver/${driverId}`),
+      apiClient.get<DriversLicense>(`/drivers-licenses/driver/${driverId}`),
 
   create: (data: Omit<DriversLicense, 'idDriversLicense'>) =>
-    apiClient.post<DriversLicense>('/drivers-licenses', data),
+      apiClient.post<DriversLicense>('/drivers-licenses', data),
 
   update: (id: number, data: Omit<DriversLicense, 'idDriversLicense'>) =>
-    apiClient.put<DriversLicense>(`/drivers-licenses/${id}`, data),
+      apiClient.put<DriversLicense>(`/drivers-licenses/${id}`, data),
 
   delete: (id: number) =>
-    apiClient.delete(`/drivers-licenses/${id}`),
+      apiClient.delete(`/drivers-licenses/${id}`),
 };
 
 // ============================================
@@ -302,19 +304,19 @@ export const driversLicenseApi = {
 
 export const firstAidKitApi = {
   getAll: () =>
-    apiClient.get<FirstAidKit[]>('/first-aid-kits'),
+      apiClient.get<FirstAidKit[]>('/first-aid-kits'),
 
   getByVehicle: (vehicleId: number) =>
-    apiClient.get<FirstAidKit>(`/first-aid-kits/vehicle/${vehicleId}`),
+      apiClient.get<FirstAidKit>(`/first-aid-kits/vehicle/${vehicleId}`),
 
   create: (data: Omit<FirstAidKit, 'idFirstAidKit'>) =>
-    apiClient.post<FirstAidKit>('/first-aid-kits', data),
+      apiClient.post<FirstAidKit>('/first-aid-kits', data),
 
   update: (id: number, data: Omit<FirstAidKit, 'idFirstAidKit'>) =>
-    apiClient.put<FirstAidKit>(`/first-aid-kits/${id}`, data),
+      apiClient.put<FirstAidKit>(`/first-aid-kits/${id}`, data),
 
   delete: (id: number) =>
-    apiClient.delete(`/first-aid-kits/${id}`),
+      apiClient.delete(`/first-aid-kits/${id}`),
 };
 
 // ============================================
@@ -323,13 +325,13 @@ export const firstAidKitApi = {
 
 export const licenseCategoryApi = {
   getAll: () =>
-    apiClient.get<LicenseCategory[]>('/license-categories'),
+      apiClient.get<LicenseCategory[]>('/license-categories'),
 
   create: (data: { categoryName: string }) =>
-    apiClient.post<LicenseCategory>('/license-categories', data),
+      apiClient.post<LicenseCategory>('/license-categories', data),
 
   delete: (id: number) =>
-    apiClient.delete(`/license-categories/${id}`),
+      apiClient.delete(`/license-categories/${id}`),
 };
 
 // ============================================
@@ -338,20 +340,20 @@ export const licenseCategoryApi = {
 
 export const vehicleLocationApi = {
   getAll: () =>
-    apiClient.get<VehicleLocation[]>('/vehicle-locations'),
+      apiClient.get<VehicleLocation[]>('/vehicle-locations'),
 
   assign: (vehicleId: number, locationUnitId: number) =>
-    apiClient.post<VehicleLocation>('/vehicle-locations', null, {
-      params: { vehicleId, locationUnitId },
-    }),
+      apiClient.post<VehicleLocation>('/vehicle-locations', null, {
+        params: { vehicleId, locationUnitId },
+      }),
 
   update: (id: number, locationUnitId: number) =>
-    apiClient.put<VehicleLocation>(`/vehicle-locations/${id}`, null, {
-      params: { locationUnitId },
-    }),
+      apiClient.put<VehicleLocation>(`/vehicle-locations/${id}`, null, {
+        params: { locationUnitId },
+      }),
 
   delete: (id: number) =>
-    apiClient.delete(`/vehicle-locations/${id}`),
+      apiClient.delete(`/vehicle-locations/${id}`),
 };
 
 // ============================================
@@ -360,18 +362,18 @@ export const vehicleLocationApi = {
 
 export const driverLocationApi = {
   getAll: () =>
-    apiClient.get<DriverLocation[]>('/driver-locations'),
+      apiClient.get<DriverLocation[]>('/driver-locations'),
 
   assign: (driverId: number, locationUnitId: number) =>
-    apiClient.post<DriverLocation>('/driver-locations', null, {
-      params: { driverId, locationUnitId },
-    }),
+      apiClient.post<DriverLocation>('/driver-locations', null, {
+        params: { driverId, locationUnitId },
+      }),
 
   update: (id: number, locationUnitId: number) =>
-    apiClient.put<DriverLocation>(`/driver-locations/${id}`, null, {
-      params: { locationUnitId },
-    }),
+      apiClient.put<DriverLocation>(`/driver-locations/${id}`, null, {
+        params: { locationUnitId },
+      }),
 
   delete: (id: number) =>
-    apiClient.delete(`/driver-locations/${id}`),
+      apiClient.delete(`/driver-locations/${id}`),
 };
