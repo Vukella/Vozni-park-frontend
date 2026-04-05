@@ -30,6 +30,8 @@ import type {
 export const authApi = {
   login: (data: LoginRequest) =>
       apiClient.post<LoginResponse>('/auth/login', data),
+  verifyOtp: (data: { username: string; otp: string }) =>
+      apiClient.post('/auth/verify-otp', data),
 };
 
 // ============================================
@@ -376,4 +378,20 @@ export const driverLocationApi = {
 
   delete: (id: number) =>
       apiClient.delete(`/driver-locations/${id}`),
+};
+
+// ============================================
+// Registration Service (Clojure — port 8081)
+// ============================================
+import registrationClient from './registrationClient';
+
+export const registrationServiceApi = {
+  register: (email: string) =>
+      registrationClient.post('/register', { email }),
+
+  verify: (token: string) =>
+      registrationClient.get('/verify', { params: { token } }),
+
+  complete: (token: string, username: string, password: string) =>
+      registrationClient.post('/complete', { token, username, password }),
 };

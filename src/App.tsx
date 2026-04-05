@@ -16,6 +16,10 @@ import { FuelTypesPage } from './features/fuel-types/FuelTypesPage';
 import { RegistrationsPage } from './features/registrations/RegistrationsPage';
 import { DriversLicensesPage } from './features/drivers-licenses/DriversLicensesPage';
 import { FirstAidKitsPage } from './features/first-aid-kits/FirstAidKitsPage';
+import { RegisterPage } from './features/registration/RegisterPage';
+import { VerifyEmailPage } from './features/registration/VerifyEmailPage';
+import { CompleteRegistrationPage } from './features/registration/CompleteRegistrationPage';
+import { RegistrationSuccessPage } from './features/registration/RegistrationSuccessPage';
 
 export default function App() {
   return (
@@ -26,6 +30,10 @@ export default function App() {
             <Routes>
               {/* Public routes */}
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/verify-email" element={<VerifyEmailPage />} />
+              <Route path="/complete-registration" element={<CompleteRegistrationPage />} />
+              <Route path="/registration-success" element={<RegistrationSuccessPage />} />
 
               {/* Protected routes */}
               <Route element={<ProtectedRoute />}>
