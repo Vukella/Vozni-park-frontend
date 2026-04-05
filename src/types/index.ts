@@ -224,11 +224,15 @@ export interface LoginRequest {
 
 // Confirmed: matches backend LoginResponseDTO
 export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  tokenType: string;
-  expiresIn: number;
-  user: AppUserResponse;
+  // OTP step 1 response
+  status?: string;
+  message?: string;
+  // OTP step 2 / direct login success response
+  accessToken?: string;
+  refreshToken?: string;
+  tokenType?: string;
+  expiresIn?: number;
+  user?: AppUserResponse;
 }
 
 export interface AuthUser {
